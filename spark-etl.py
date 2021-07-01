@@ -24,16 +24,20 @@ dcschema = StructType([
 
 if __name__ == "__main__":
     dataType = "json"
-		spark = SparkSession.builder.appName("ETL Using SparkSQL example").getOrCreate()
-		df = spark.read.format(dataType).option("header", "true").load("data." + dataType)
-		df.show() # 원래 데이터 형
-		df.printSchema()
-		df = df.withColumn("content", from_json("content", txschema))
-		df = df.withColumn("patient", from_json("patient", ptschema))
-		df = df.withColumn("dental clinic", from_json("dental clinic", dcschema))
-		df.show() # json 문자열 parse
-		df = df.select("date", "payment", "content.*", "patient.*", "dentist", "dental clinic.*") # json 데이터 읽기
-		df = df.sort(desc("patient_name"), "date") # 환자별 시간순서 정렬
-		df.show()
-		df.groupBy("patient_name").sum("price").show()
-		df.printSchema()
+    spark = SparkSession.builder.appName(
+        "ETL Using SparkSQL example").getOrCreate()
+    df = spark.read.format(dataType).option(
+        "header", "true").load("data." + dataType)
+    df.show()  # 원래 데이터 형
+    df.printSchema()
+    df = df.withColumn("content", from_json("content", txschema))
+    df = df.withColumn("patient", from_json("patient", ptschema))
+    df = df.withColumn("dental clinic", from_json(
+        "dental clinic", dcschema))
+    df.show()  # json 문자열 parse
+    df = df.select("date", "payment", "content.*", "patient.*",
+                   "dentist", "dental clinic.*")  # json 데이터 읽기
+    df = df.sort(desc("patient_name"), "date")  # 환자별 시간순서 정렬
+    df.show()
+    df.groupBy("patient_name").sum("price").show()
+    df.printSchema()
