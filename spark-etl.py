@@ -32,11 +32,11 @@ if __name__ == "__main__":
     df.printSchema()
     df = df.withColumn("content", from_json("content", txschema))
     df = df.withColumn("patient", from_json("patient", ptschema))
-    df = df.withColumn("dental clinic", from_json(
-        "dental clinic", dcschema))
+    df = df.withColumn("dental_clinic", from_json(
+        "dental_clinic", dcschema))
     df.show()  # json 문자열 parse
     df = df.select("date", "payment", "content.*", "patient.*",
-                   "dentist", "dental clinic.*")  # json 데이터 읽기
+                   "dentist", "dental_clinic.*")  # json 데이터 읽기
     df = df.sort(desc("patient_name"), "date")  # 환자별 시간순서 정렬
     df.show()
     df.groupBy("patient_name").sum("price").show()

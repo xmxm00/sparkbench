@@ -43,40 +43,44 @@ treat_list = [
 ]
 
 clinic_list = [
-	{"clinic_name": "Vatech", "address" : "Hwasung", "telephone" : "031-111-1111"},
-	{"clinic_name": "Asan", "address" : "Seoul", "telephone" : "031-222-2222"},
-	{"clinic_name": "Samsung", "address" : "Yuljeon", "telephone" : "031-333-3333"},
-	{"clinic_name": "Wonkwang", "address" : "Iksan", "telephone" : "031-444-4444"}
+	{"clinic_name": "Vatech", "address": "Hwasung", "telephone": "031-111-1111"},
+	{"clinic_name": "Asan", "address": "Seoul", "telephone": "031-222-2222"},
+	{"clinic_name": "Samsung", "address": "Yuljeon", "telephone": "031-333-3333"},
+	{"clinic_name": "Wonkwang", "address": "Iksan", "telephone": "031-444-4444"}
 ]
-			
-patient_list=[]
+
+patient_list = []
+
+
 def gen_patient():
+	print("Generating patient list...")
 	for i in range(0, 100):
-		patientJson={
+		patientJson = {
 			"uuid4": generator.uuid4(),
 			"patient_name": generator.name(),
 			"age": generator.pyint(min_value=3, max_value=97),
 			"sex": random.choice(["Male", "Female"]),
 			}
 		patient_list.append(patientJson)
-
+	print("Successfully generated!")
 
 if __name__ == "__main__":
-	data=[]
+	data = []
+	num = 100000
 	gen_patient()
-	for i in range(0, 100000):
+	print("Making " + str(num) + " fake data...")
+	for i in range(0, num):
 		dataAppend={
 			"date": generator.date_between(start_date='-2y').strftime("%Y%m%d"),
 			"patient": json.dumps(random.choice(patient_list)),
 			"dentist": generator.name(),
-			"dental clinic": json.dumps(random.choice(clinic_list)),
+			"dental_clinic": json.dumps(random.choice(clinic_list)),
 			"content": json.dumps(random.choice(treat_list)),
 			"payment": random.choice(["Credit", "Cash"])
 			}
 		data.append(dataAppend)
-	# print(data)
-	print("saving...")
-	with open('temp.json', 'w') as f:
+	print("Now saving...")
+	with open('data.json', 'w') as f:
 		jsonData=json.dump(data, f)
 
 
