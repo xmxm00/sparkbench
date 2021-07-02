@@ -40,7 +40,7 @@ if __name__ == "__main__":
     df = df.select("date", "payment", "content.*", "patient.*", "dentist", "dental_clinic.*")  # json 데이터 읽기
     print("All Useful Data")
     df.show()
-    df = df.groupBy("clinic_name").sum("price").withColumnRenamed("sum(price)", "profit")  # 치과별 매출
-    df = df.sort(desc("profit"))
+    df = df.groupBy("clinic_name").sum("price").withColumnRenamed("sum(price)", "profit")# 치과별 매출
+    df = df.sort(desc("profit")).withColumnRenamed("clinic_name", "dental_clinic")
     print("Dental Clinic Profit")
     df.show()
