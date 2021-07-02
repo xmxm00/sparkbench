@@ -1,7 +1,7 @@
-from faker import Faker
+import timeit
 import json
-import datetime
 import random
+from faker import Faker
 
 generator = Faker()
 
@@ -69,21 +69,19 @@ if __name__ == "__main__":
 	num = 100000
 	gen_patient()
 	print("Making " + str(num) + " fake data...")
+	start = timeit.default_timer()
 	for i in range(0, num):
 		dataAppend={
 			"date": generator.date_between(start_date='-2y').strftime("%Y%m%d"),
-			"patient": json.dumps(random.choice(patient_list)),
+			"patient": json.dumps(random.choice(patient_list)), # json.dumps는 json to string
 			"dentist": generator.name(),
 			"dental_clinic": json.dumps(random.choice(clinic_list)),
 			"content": json.dumps(random.choice(treat_list)),
 			"payment": random.choice(["Credit", "Cash"])
 			}
 		data.append(dataAppend)
+	end = timeit.default_timer()
+	print("Took " + str(end - start) + " seconds...")
 	print("Now saving...")
 	with open('data.json', 'w') as f:
 		jsonData=json.dump(data, f)
-
-
-'''
-json.dumps 이용하면 json to string
-'''
