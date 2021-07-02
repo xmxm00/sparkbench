@@ -1,3 +1,4 @@
 # ignore all data files
 data/
 output/
+wholedata.py
