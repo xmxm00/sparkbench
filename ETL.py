@@ -83,7 +83,7 @@ if __name__=="__main__":
 
     if args.target == "chart":
         df = getChart(df)
-        df = df.groupBy("doctor").agg(count("patient_ID"))
+        df = df.groupBy("doctor").agg(count("patient_ID")).withColumnRenamed("count(patient_ID)", "patient_num")
     elif args.target == "receipt":
         df = getReceipt(df)
         df = df.groupBy("hospital_name").sum("treatment_price").withColumnRenamed("sum(treatment_price)", "profit").\
