@@ -28,15 +28,15 @@ if __name__ == "__main__":
     iteration = 1
     dataType = "parquet"
     for i in range(0, iteration):
-        start_time = timeit.default_timer()
         spark = SparkSession.builder.appName("Data Load Benchmark").getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
-        df = spark.read.format(dataType).option("header", "true").load("./data/" + dataType)
-        df = df.withColumn("content", from_json("content", txschema))
-        df = df.withColumn("patient", from_json("patient", ptschema))
-        df = df.withColumn("dental_clinic", from_json("dental_clinic", dcschema))
-        df = df.select("date", "payment", "content.*", "patient.*", "dentist", "dental_clinic.*")
+        start_time = timeit.default_timer()
+        df = spark.read.format(dataType).option("header", "true").load("./parsed/" + dataType)
         end_time = timeit.default_timer() # filter(advanced)
+        # df = df.withColumn("content", from_json("content", txschema))
+        # df = df.withColumn("patient", from_json("patient", ptschema))
+        # df = df.withColumn("dental_clinic", from_json("dental_clinic", dcschema))
+        # df = df.select("date", "payment", "content.*", "patient.*", "dentist", "dental_clinic.*")
         print(dataType.upper() + " : " + str(end_time - start_time))
         df.show()
         # remove data
