@@ -77,18 +77,22 @@ if __name__=="__main__":
 
     df = spark.read.format(args.inputformat).load("./data")
     spark.sparkContext.setLogLevel("ERROR")
-
+    print("Original Data")
     df.show(50)
     df.printSchema()
 
     if args.target == "chart":
         df = getChart(df)
-        df = df.groupBy("doctor").agg(count("patient_ID")).withColumnRenamed("count(patient_ID)", "patient_num")
+        df1 = df.groupBy("doctor").agg(count("patient_ID")).withColumnRenamed("count(patient_ID)", "patient_num")
     elif args.target == "receipt":
         df = getReceipt(df)
-        df = df.groupBy("hospital_name").sum("treatment_price").withColumnRenamed("sum(treatment_price)", "profit").\
+        df1 = df.groupBy("hospital_name").sum("treatment_price").withColumnRenamed("sum(treatment_price)", "profit").\
           withColumnRenamed("hospital_name", "hospital")
         print("Hospital Profit")
+    print("Parsed Data")
     df.show(50)
     df.printSchema()
+    print("Filtered Data")
+    df1.show(50)
+    df1.printSchema()
     df.coalesce(1).write.format(args.outputformat).mode("overwrite").save(args.output)
