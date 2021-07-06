@@ -1,6 +1,8 @@
 # ignore all data files
 data/
 output/
+parquet/
+parsed/
 wholedata.py
 *.json
 .DS_Store
