@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
-from pyspark.sql.functions import udf, col, from_json, flatten, explode, desc
+from pyspark.sql.functions import udf, col, from_json, flatten, explode, desc, count
 from datetime import datetime
 import argparse
 
@@ -83,6 +83,7 @@ if __name__=="__main__":
 
     if args.target == "chart":
         df = getChart(df)
+        df = df.groupBy("doctor").agg(count("patient_ID"))
     elif args.target == "receipt":
         df = getReceipt(df)
         df = df.groupBy("hospital_name").sum("treatment_price").withColumnRenamed("sum(treatment_price)", "profit").\

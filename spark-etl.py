@@ -1,3 +1,4 @@
+import timeit
 from pyspark import SparkContext, SQLContext
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
@@ -28,7 +29,7 @@ if __name__ == "__main__":
         "ETL Using SparkSQL example").getOrCreate()
     spark.sparkContext.setLogLevel("ERROR") # This option don't print any INFO messages on console
     df = spark.read.format(dataType).option(
-        "header", "true").load("./data/data." + dataType)
+        "header", "true").load("./data." + dataType)
     print("Original Data")
     df.show()  # 원래 데이터 형
     df.printSchema()
@@ -40,6 +41,7 @@ if __name__ == "__main__":
     df = df.select("date", "payment", "content.*", "patient.*", "dentist", "dental_clinic.*")  # json 데이터 읽기
     print("All Useful Data")
     df.show()
+    df.write.format("json").mode("overwrite").option("header", "true").save("./output/json")
     df = df.groupBy("clinic_name").sum("price").withColumnRenamed("sum(price)", "profit")# 치과별 매출
     df = df.sort(desc("profit")).withColumnRenamed("clinic_name", "dental_clinic")
     print("Dental Clinic Profit")
