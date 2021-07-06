@@ -32,20 +32,14 @@ if __name__ == "__main__":
     iteration = 1
     dataType = args.inputformat
     for i in range(0, iteration):
-        spark = SparkSession.builder.appName("Data Read Benchmark").getOrCreate()
-        df = spark.read.format(dataType).option("header", "true").load("./parsed/" + dataType)
-        spark.sparkContext.setLogLevel("ERROR")
-        start_time = timeit.default_timer()
+        spark = SparkSession.builder.appName("Parse original data").getOrCreate()
+        df = spark.read.format(dataType).option("header", "true").load("./data/" + dataType)
         print("Original Data")
         df.show()
-        end_time = timeit.default_timer() 
-        df = df.sort(desc("patient_name"), "date") # SQL을 이용한 정렬
-        print("Sort by patient_name and date")
-        df.show()
-        print("Groupby patient_name, sum of price")
-        df.groupBy("patient_name").sum("price").show() # filter
-        df.printSchema()
-        print(dataType.upper() + " : " + str(end_time - start_time))
-        # remove data
-        # add data
-
+        spark.sparkContext.setLogLevel("ERROR")
+        df = df.withColumn("content", from_json("content", txschema))
+        df = df.withColumn("patient", from_json("patient", ptschema))
+        df = df.withColumn("dental_clinic", from_json("dental_clinic", dcschema))
+        df = df.select("date", "payment", "content.*", "patient.*", "dentist", "dental_clinic.*")
+        print("Parsed Data")
+        df.show() 
