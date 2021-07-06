@@ -2,6 +2,7 @@
 data/
 parsed/
 output/
+parquet/
 wholedata.py
 *.json
 .DS_Store
